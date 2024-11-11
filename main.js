@@ -78,7 +78,7 @@ window.onload = function() {
         gsap.set("#a", { "box-shadow": "0px 4px 4px 0px rgba(116, 116, 116, 0.25)" }); 
         gsap.set("h1", { "font-size": "8em" });// Restore box-shadow
 
-    }, 10000); // Wait for 10 seconds before resetting positions and restoring filters
+    }, 6000); // Wait for 10 seconds before resetting positions and restoring filters
 };
 
 // Select all buttons and content inside #b
