@@ -4,9 +4,317 @@
 :root {
     --radius: 0px;
     --gap: 8px;
+    --bg:  linear-gradient(to bottom right, rgba(255, 255, 255, 0.00) 9%, rgba(213, 213, 213, 0.39) 50%) bottom right / 50% 50% no-repeat, linear-gradient(to bottom left, rgba(255, 255, 255, 0.00) 9%, rgba(213, 213, 213, 0.39) 50%) bottom left / 50% 50% no-repeat, linear-gradient(to top left, rgba(255, 255, 255, 0.00) 9%, rgba(213, 213, 213, 0.39) 50%) top left / 50% 50% no-repeat, linear-gradient(to top right, rgba(255, 255, 255, 0.00) 9%, rgba(213, 213, 213, 0.39) 50%) top right / 50% 50% no-repeat;
+    ;
+    --buttonbg:  linear-gradient(to bottom right, rgba(255, 255, 255, 0.00) 9%, rgba(213, 213, 213, 0.39) 50%) bottom right / 50% 50% no-repeat, linear-gradient(to bottom left, rgba(255, 255, 255, 0.00) 9%, rgba(213, 213, 213, 0.39) 50%) bottom left / 50% 50% no-repeat, linear-gradient(to top left, rgba(255, 255, 255, 0.00) 9%, rgba(213, 213, 213, 0.39) 50%) top left / 50% 50% no-repeat, linear-gradient(to top right, rgba(255, 255, 255, 0.00) 9%, rgba(213, 213, 213, 0.39) 50%) top right / 50% 50% no-repeat;
+--bga: rgba(232, 255, 213, 0.833);
+    --border: 0.5px solid #d0f8afd9;
+    --boxshadow:0px 4px 4px 0px rgba(116, 116, 116, 0.25);
+    --filter: blur(0px);
+    --backdropfilter: blur(10px);
+--bgbutton: rgba(247, 247, 247, 0.20);
+--filter:  blur(0px);
+--color: black;
+--bgb: rgba(255, 255, 255, 0.25);
+
 }
 
 @font-face {
     font-family: 'm1';
-    src: url('fonts/Millionaire-Script.ttf');
+    src: url('./Millionaire-Script.ttf');
 }
+html {
+    height: 100vh;
+    font-family: 'Unbounded';
+    overflow: hidden;
+    font-size: 24px;
+font-style: normal;
+font-weight: 200;
+line-height: normal;
+letter-spacing: -0.48px;
+}
+
+html, body {
+    width: 100%;
+    min-height: 100vh;
+    position: fixed; 
+    margin: 0; /* Remove any default margin */
+    padding: 0; /* Remove any default padding */
+}
+
+.unbounded {
+    font-family: "Unbounded", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 200;
+    font-style: normal;
+  }
+
+  h1 {
+    font-family: 'm1';
+    background: linear-gradient(to bottom right, #a2ff38 50%, rgb(223, 255, 197) 50%) bottom right / 50% 50% no-repeat, linear-gradient(to bottom left, #a2ff38 20%, rgb(223, 255, 197) 50%) bottom left / 50% 50% no-repeat, linear-gradient(to top left, #a2ff38 25%, rgb(223, 255, 197) 50%) top left / 50% 50% no-repeat, linear-gradient(to top right, #a2ff38 5%, rgb(223, 255, 197) 50%) top right / 50% 50% no-repeat;
+background-clip: text;
+-webkit-background-clip: text;
+-webkit-text-fill-color: #e3fccf73;
+backdrop-filter: blur(10.350000381469727px);
+font-variant-numeric: lining-nums proportional-nums stacked-fractions;
+text-shadow:  0px 4px 4px rgba(255, 255, 255, 0.74);
+font-size: 6em;
+font-style: normal;
+font-weight: 400;
+line-height: 90%; /* 115.2px */
+letter-spacing: -2.56px;
+position: absolute;
+width: 90%;
+transform: rotate(-0.072deg);
+text-align: center;
+  margin: 0;
+  z-index: -1;
+  }
+
+  h4 {
+    font-family: 'm1';
+    margin: 0.5em 0.5em;
+    font-size: 40px;
+  }
+
+  #center {
+    position: absolute;
+    height: 100%;
+width: 100%;
+    display: flex;
+  justify-content: center;
+  align-items: center;
+  }
+
+  body {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+  }
+
+  section {
+  
+
+    height: 100vh;
+  }
+
+  .button {
+    color: var(black);
+    text-align: center;
+    display: flex;
+    justify-content: center;
+align-items: center;
+padding: 12px 10px;
+width: fit-content;
+background: var(--bgb);
+
+box-shadow: var(--boxshadow);
+  }
+
+  .nav {
+
+    justify-items: end;
+    display: grid;
+    gap: 0.5em;
+  }
+  
+  .nav .button {
+    border: 1px solid rgba(191, 191, 191, 0.77);
+
+  
+  }
+
+  .button:hover {
+    background: var(--bga);
+    border: none;
+    font-weight: 300;
+    cursor: pointer;
+  }
+  .button:focus {
+    background: var(--bg);
+   
+    font-weight: 400;
+    cursor: pointer;
+  }
+
+  #b {
+    
+    backdrop-filter: var(--backdropfilter);
+    
+  }
+
+  #a {
+  
+    display: flex;
+   z-index: 3;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+  
+    box-shadow: 0px 4px 4px 0px rgba(116, 116, 116, 0.25);
+    backdrop-filter: blur(8px);
+   
+  }
+
+  #sub {
+    width: 5em;
+  }
+
+  #b .content {
+    height: 100%;
+    width: 100%;
+    transition: opacity 0.5s ease; /* Transition effect for fading */
+    opacity: 0;
+    display: none;
+    min-height: 100vh;
+}
+
+
+.content.active {
+    display: block;
+
+}
+
+
+.button.selected {
+    background: var(--bg);
+    color: rgb(0, 0, 0);
+}
+
+img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.transition-container {
+    position: fixed; /* To ensure it stays in place */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden; /* Prevent overflow */
+}
+
+.transition-container span {
+    position: relative;
+    flex: 1;
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0px 4px 4px 0px rgba(116, 116, 116, 0.25);
+    backdrop-filter: blur(10px);
+    height: 100%;
+    width: 0%;
+    
+}
+
+.from-left {
+    flex-direction: column;
+}
+
+#b .content.selected-content {
+    display: block;
+    opacity: 1;
+   
+}
+
+#b #sub {
+    overflow-y: scroll;
+    background-image: url("img/bg.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+#info {
+   padding: 0px 2em;
+}
+.accordion {
+margin-bottom: 12px;
+    padding: 0 12px;
+    border-bottom: 0.5px solid #757575a1;
+    gap: auto;
+    display: flex;
+    /* background-color: #eee; */
+    color: #444;
+    cursor: pointer;
+    /* padding: 18px; */
+    /* width: 100%; */
+    /* border: none; */
+    /* text-align: left; */
+    /* outline: none; */
+    /* font-size: 15px; */
+    transition: 0.4s;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .active, .accordion:hover {
+   
+  }
+  
+  .panel {
+    padding: 0 18px;
+    display: none;
+  
+    overflow: hidden;
+  }
+
+  b {
+    font-weight: 400;
+  }
+
+  .accordion span:after  {
+
+    
+    content: "\002B";
+  
+   
+    color: #000000;
+    float: left;
+    
+  }
+  
+.accordion.active span:after {
+    content: "\2212";
+
+    color: #0f0f0f;
+    float: left;
+   
+  }
+
+  #tag {
+    font-size: 16px;
+    display: flex;
+padding: 12px 24px;
+justify-content: center;
+align-items: center;
+gap: 10px;
+background: radial-gradient(209.26% 50.01% at 50% 50%, #FFF 86.5%, rgba(255, 255, 255, 0.00) 100%);
+box-shadow: -4px 3px 4px 0px rgba(155, 155, 155, 0.20) inset, 5px -2px 4px 0px rgba(152, 152, 152, 0.25) inset;
+  }
+
+
+  div#intro {
+    gap: 12px;
+    padding-right: 2em;
+    display: flex;
+    /* justify-content: flex-end; */
+    flex-direction: column;
+    align-items: flex-end; }
+
+    div#people {
+        gap: 12px;
+        padding: 2em;
+    }
+
+    #center, #a, #b {
+        opacity: 0; /* Start hidden */
+        visibility: hidden; /* Ensure it doesn't affect layout */
+    }
+
+    
