@@ -1,84 +1,68 @@
-window.onload = function() {
-    // Step 1: Ensure initial elements are hidden until animation starts
-    gsap.set("#center, #a, #b", { opacity: 0, visibility: 'visible' });
+let isAnimating = false;
+
+window.onload = function () {
+    // Selectors
+    const sectionButtons = document.querySelectorAll("#a .button");
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    const minSpacing = 150; // Minimum spacing between buttons
+
+    // Step 1: Initial setup (Hide initial elements, and prepare for animation)
+    gsap.set("#center, #a, #b", { opacity: 0, visibility: "visible" }); // Hide elements initially
+    gsap.set("#a, #b", { "backdrop-filter": "none" }); // Remove backdrop-filter from #a and #b
+    gsap.set("#a", { "box-shadow": "none" }); // Remove box-shadow from #a
+    gsap.set("h1", { "font-size": "6em" }); // Set the font size of h1 immediately
 
     // Step 2: Animate #center to be visible over 10 seconds
     gsap.to("#center", { opacity: 1, duration: 10 });
 
-    // Step 3: Animate #a and #b immediately (but with no backdrop-filter)
-    gsap.set("#a, #b", { "backdrop-filter": "none" });
-    gsap.set("#a", { "box-shadow": "none" });
-    gsap.set("h1", { "font-size": "6em" });
+    // Step 3: Animate random button positions
+    sectionButtons.forEach((button, index) => {
+        const initialPosition = button.getBoundingClientRect();
+        let randomX, randomY, overlapping;
 
+        do {
+            overlapping = false;
+            randomX = Math.random() * (windowWidth - button.offsetWidth);
+            randomY = Math.random() * (windowHeight - button.offsetHeight);
 
-    // Step 4: Start button animation immediately and move buttons to random positions
-    const buttons = document.querySelectorAll("#a .button");
-    
-    const minSpacing = 150;
-    const windowWidth = window.innerWidth;
-        const windowHeight = window.innerHeight;
-
-   buttons.forEach((button, index) => {
-            const initialPosition = button.getBoundingClientRect();
-            button.dataset.x = initialPosition.x;
-            button.dataset.y = initialPosition.y;
-
-            // Ensure the buttons don't overlap by checking their random positions
-            let randomX, randomY;
-            let overlapping;
-            do {
-                overlapping = false;
-                randomX = Math.random() * (windowWidth - 100); // 100 to ensure the button stays inside the viewport
-                randomY = Math.random() * (windowHeight - 100); // 100 to ensure the button stays inside the viewport
-
-                // Check if the new position overlaps with any other button
-                for (let i = 0; i < index; i++) {
-                    const otherButton = buttons[i];
-                    const otherRect = otherButton.getBoundingClientRect();
-                    const distX = Math.abs(randomX - otherRect.x);
-                    const distY = Math.abs(randomY - otherRect.y);
-
-                    // If the distance between buttons is less than the minimum spacing, mark as overlapping
-                    if (distX < minSpacing && distY < minSpacing) {
-                        overlapping = true;
-                        break;
-                    }
+            // Check for overlap with already positioned buttons
+            for (let i = 0; i < index; i++) {
+                const otherButton = sectionButtons[i].getBoundingClientRect();
+                if (
+                    Math.abs(randomX - otherButton.x) < minSpacing &&
+                    Math.abs(randomY - otherButton.y) < minSpacing
+                ) {
+                    overlapping = true;
+                    break;
                 }
-            } while (overlapping); // Keep trying until a non-overlapping position is found
+            }
+        } while (overlapping); // Retry until a valid position is found
 
-            // Move each button to a random position over 10 seconds
-            gsap.to(button, {
-                x: randomX - initialPosition.x,
-                y: randomY - initialPosition.y,
-                duration: 4, // Animate buttons for 10 seconds
-                ease: "power2.inOut"
-            });
+        // Animate to random positions
+        gsap.to(button, {
+            x: randomX - initialPosition.x,
+            y: randomY - initialPosition.y,
+            duration: 4,
+            ease: "power2.inOut",
         });
+    });
 
-    // Step 5: After 2 seconds, make #a and #b visible and restore backdrop-filter after 10 seconds
+    // Step 4: Show #a and #b after 2 seconds (fade in effect)
     setTimeout(() => {
-        gsap.to("#a", { opacity: 1, duration: 1 });  // Make #a visible after 2 seconds
-        gsap.to("#b", { opacity: 1, duration: 1 });  // Make #b visible after 2 seconds
-    }, 2000); // After 2 seconds
+        gsap.to("#a", { opacity: 1, duration: 1 });
+        gsap.to("#b", { opacity: 1, duration: 1 });
+    }, 2000);
 
-    // Step 6: After 10 seconds, reset button positions and restore backdrop-filter
+    // Step 5: Reset button positions and apply blur effect to #a and #b after 7 seconds
     setTimeout(() => {
-        buttons.forEach(button => {
-            gsap.to(button, {
-                x: 0, 
-                y: 0, 
-                duration: 2, 
-                ease: "power2.inOut"
-            });
-        });
+        sectionButtons.forEach((button) =>
+            gsap.to(button, { x: 0, y: 0, duration: 2, ease: "power2.inOut" })
+        );
 
-        // Re-enable backdrop-filter after 10 seconds
-        gsap.set("#a", { "backdrop-filter": "blur(8px)" });
-        gsap.set("#b", { "backdrop-filter": "blur(8px)" });
-        gsap.set("#a", { "box-shadow": "0px 4px 4px 0px rgba(116, 116, 116, 0.25)" }); 
-        gsap.set("h1", { "font-size": "8em" });// Restore box-shadow
-
-    }, 7000); // Wait for 10 seconds before resetting positions and restoring filters
+        // Apply blur effect to #a and #b
+        gsap.to("#a, #b", { css: { "backdrop-filter": "blur(8px)" }, duration: 0 });
+    }, 7000);
 };
 
 // Select all buttons and content inside #b
@@ -87,34 +71,29 @@ const contents = document.querySelectorAll('#b .content');  // Select only conte
 const transitionContainer = document.querySelector('.transition-container');
 const tiles = document.querySelectorAll('.transition-container .tile');
 
-// Function to handle button click and reveal content with animation
 function handleButtonClick(event) {
+    if (isAnimating) return; // Prevent actions during ongoing animations
+    isAnimating = true;
+
     const selectedButtonId = event.target.id;
 
-    // Remove 'selected' class from all buttons
-    buttons.forEach(button => {
-        button.classList.remove('selected');
-    });
+    buttons.forEach(button => button.classList.remove("selected"));
+    event.target.classList.add("selected");
 
-    // Add 'selected' class to the clicked button
-    event.target.classList.add('selected');
-
-    // Hide all content first
-    contents.forEach(content => {
-        content.classList.remove('selected-content');
-    });
-
-    // Show the selected content immediately
+    contents.forEach(content => content.classList.remove("selected-content"));
     const selectedContent = document.querySelector(`#b .content#${selectedButtonId}`);
-    selectedContent.classList.add('selected-content'); // Show the content immediately
+    selectedContent.classList.add("selected-content");
 
-    // Trigger the tile exit animation
-    animateTilesOut();
+    animateTilesOut(() => {
+        // Reset flag after animation completes
+        isAnimating = false;
+    });
 }
 
+
 // Function to animate the tiles exiting
-function animateTilesOut() {
-    let tl = gsap.timeline({ ease: "power4.inOut" });
+function animateTilesOut(onComplete) {
+    let tl = gsap.timeline({ ease: "power4.inOut", onComplete });
 
     // Set all tiles to start at width 100% for the animation (exit)
     tl.set(tiles, { width: "100%", x: 0  });
@@ -142,18 +121,13 @@ buttons.forEach(button => {
 ////
 
 var acc = document.getElementsByClassName("accordion");
-var i;
+for (let i = 0; i < acc.length; i++) {
+    acc[i].addEventListener("click", function () {
+        if (isAnimating) return; // Prevent toggling during animations
 
-for (i = 0; i < acc.length; i++) {
-  acc[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var panel = this.nextElementSibling;
-    if (panel.style.display === "block") {
-      panel.style.display = "none";
-    } else {
-      panel.style.display = "block";
-    }
-  });
+        this.classList.toggle("active");
+        const panel = this.nextElementSibling;
+        panel.style.display = panel.style.display === "block" ? "none" : "block";
+    });
 }
-
 
