@@ -131,3 +131,28 @@ for (let i = 0; i < acc.length; i++) {
     });
 }
 
+
+window.onload = function () {
+    // Select the anchor links
+    const links = document.querySelectorAll("a[href^='#']");  // Select all links starting with #
+    const contents = document.querySelectorAll('#b .content');  // All content elements in #b
+
+    links.forEach(link => {
+        link.addEventListener('click', function (event) {
+            event.preventDefault();  // Prevent the default link behavior (scrolling)
+
+            const targetId = link.getAttribute('href').substring(1);  // Get the target id (e.g., 'ben')
+            const targetContent = document.getElementById(targetId);  // Find the corresponding content
+
+            // Hide all content first
+            contents.forEach(content => content.classList.remove("selected-content"));
+
+            // Show the target content
+            targetContent.classList.add("selected-content");
+
+            // Optionally highlight the clicked link
+            links.forEach(link => link.classList.remove("selected"));
+            link.classList.add("selected");
+        });
+    });
+};

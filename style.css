@@ -317,4 +317,6 @@ box-shadow: -4px 3px 4px 0px rgba(155, 155, 155, 0.20) inset, 5px -2px 4px 0px r
         visibility: hidden; /* Ensure it doesn't affect layout */
     }
 
-    
+    a {
+      display: none;
+  }
