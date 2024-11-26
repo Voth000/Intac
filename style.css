@@ -167,7 +167,7 @@ box-shadow: var(--boxshadow);
     height: 100%;
     width: 100%;
     transition: opacity 0.5s ease; /* Transition effect for fading */
-    opacity: 0;
+    opacity: 1;
     display: none;
     min-height: 100vh;
 }
@@ -312,11 +312,43 @@ box-shadow: -4px 3px 4px 0px rgba(155, 155, 155, 0.20) inset, 5px -2px 4px 0px r
         padding: 2em;
     }
 
-    #center, #a, #b {
-        opacity: 0; /* Start hidden */
-        visibility: hidden; /* Ensure it doesn't affect layout */
-    }
 
-    a {
-      display: none;
+
+    a.nav-link {
+      display: none; /* Links are hidden */
   }
+
+  .content {
+    opacity: 1;
+    visibility: hidden;
+    transition: opacity 0.5s ease;
+}
+
+.content.selected-content {
+    opacity: 1;
+    visibility: visible;
+}
+
+#b .content {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out; /* Smooth transition for visibility */
+}
+
+/* When the content is selected, it becomes visible */
+#b .content.selected-content {
+  opacity: 1;
+  visibility: visible;
+}
+
+.selected-content {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.5s ease, visibility 0s linear 0s; /* Fade in immediately */
+}
+
+#b, #a {
+  opacity: 0;
+  visibility: hidden; /* Hide initially */
+  transition: opacity 0.5s ease, visibility 0s linear 0.5s; /* Smooth fade-in transition */
+}

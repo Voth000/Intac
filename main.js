@@ -1,7 +1,89 @@
-let isAnimating = false;
+
+let isAnimating = false; // Flag for button navigation animations
+// Function to handle button click (for navigation)
+function handleButtonClick(event) {
+    if (isAnimating) return; // Prevent actions during ongoing animations
+    isAnimating = true;
+
+    const selectedButtonId = event.target.id; // Get the ID of the clicked button
+
+    // Update button styles to reflect selection
+    const buttons = document.querySelectorAll("#a .button");
+    buttons.forEach(button => button.classList.remove("selected"));
+    event.target.classList.add("selected");
+
+    // Hide all content sections first
+    const contents = document.querySelectorAll("#b .content");
+    contents.forEach(content => content.classList.remove("selected-content"));
+    
+    // Find and show the selected content section
+    const selectedContent = document.querySelector(`#b .content#${selectedButtonId}`);
+    if (selectedContent) {
+        selectedContent.classList.add("selected-content"); // Show the selected content
+        console.log(`Content with ID ${selectedButtonId} is now visible`); // Debugging log to confirm visibility
+    }
+
+    // Trigger the tile animation after the content has been revealed
+    animateTilesOut(() => {
+        // Reset flag after animation completes
+        isAnimating = false;
+    });
+}
+
+// Example of setting up event listeners for the buttons (to trigger handleButtonClick)
+document.querySelectorAll('#a .button').forEach(button => {
+    button.addEventListener('click', handleButtonClick);
+});
+
+window.addEventListener("load", function () {
+    const hash = window.location.hash.substring(1); // Extract the hash part from the URL
+
+    // Ensure that #a and #b are visible
+    gsap.set("#a, #b", { opacity: 1, visibility: "visible" }); // Make #a and #b visible
+
+    // Check if the hash exists and is not empty
+    if (hash) {
+        // Find and highlight the corresponding button in #a
+        const selectedButton = document.querySelector(`#a .button#${hash}`);
+        if (selectedButton) {
+            selectedButton.classList.add("selected"); // Highlight the corresponding button
+        }
+
+        // Find and show the corresponding content in #b
+        const selectedContent = document.querySelector(`#b .content#${hash}`);
+        if (selectedContent) {
+            selectedContent.classList.add("selected-content"); // Add the selected-content class to make it visible
+            console.log(`Content with ID ${hash} is now visible`); // Debugging log to confirm visibility
+        }
+
+        // Optionally trigger tile exit animation after a short delay
+        setTimeout(function () {
+            animateTilesOut(); // Call your tile exit animation function
+        }, 300); // Adjust delay to match content fade-in duration
+    } else {
+        console.log("No matching content found for hash:", hash);
+    }
+});
+
+
+
 
 window.onload = function () {
-    // Selectors
+    // If the page has a hash in the URL, skip the animation and just scroll to the section
+    const currentHash = window.location.hash;
+
+    // If the URL contains a hash, just scroll to the section and skip the animation
+    if (currentHash) {
+        const targetElement = document.querySelector(currentHash);
+        if (targetElement) {
+            // Scroll smoothly to the target element without animation
+            targetElement.scrollIntoView({ behavior: 'smooth' });
+        }
+        isPageAnimating = false; // Stop the animation flag if we're directly loading to a section
+        return; // Exit early so the animation code does not run
+    }
+
+    // Selectors for page load animation
     const sectionButtons = document.querySelectorAll("#a .button");
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
@@ -62,6 +144,9 @@ window.onload = function () {
 
         // Apply blur effect to #a and #b
         gsap.to("#a, #b", { css: { "backdrop-filter": "blur(8px)" }, duration: 0 });
+
+        // After the page load animation is done, allow navigation
+        isPageAnimating = false;
     }, 7000);
 };
 
@@ -70,20 +155,27 @@ const buttons = document.querySelectorAll('.button');
 const contents = document.querySelectorAll('#b .content');  // Select only contents inside section#b
 const transitionContainer = document.querySelector('.transition-container');
 const tiles = document.querySelectorAll('.transition-container .tile');
-
+// Function to handle button clicks and show corresponding content
 function handleButtonClick(event) {
     if (isAnimating) return; // Prevent actions during ongoing animations
     isAnimating = true;
 
-    const selectedButtonId = event.target.id;
+    const selectedButtonId = event.target.id; // Get the ID of the clicked button
 
+    // Update button styles to reflect selection
     buttons.forEach(button => button.classList.remove("selected"));
     event.target.classList.add("selected");
 
+    // Hide all content sections first
     contents.forEach(content => content.classList.remove("selected-content"));
+    
+    // Find and show the selected content section
     const selectedContent = document.querySelector(`#b .content#${selectedButtonId}`);
-    selectedContent.classList.add("selected-content");
+    if (selectedContent) {
+        selectedContent.classList.add("selected-content"); // Show the selected content
+    }
 
+    // Trigger the tile animation after the content has been revealed
     animateTilesOut(() => {
         // Reset flag after animation completes
         isAnimating = false;
@@ -91,17 +183,17 @@ function handleButtonClick(event) {
 }
 
 
-// Function to animate the tiles exiting
+// Function to animate tiles out
 function animateTilesOut(onComplete) {
     let tl = gsap.timeline({ ease: "power4.inOut", onComplete });
 
     // Set all tiles to start at width 100% for the animation (exit)
-    tl.set(tiles, { width: "100%", x: 0  });
+    const tiles = document.querySelectorAll('.tile'); // Example selector, change as needed
+    tl.set(tiles, { width: "100%", x: 0 });
 
     // Animate the tiles expanding and moving to the right (exit effect)
     tl.to(tiles, {
         duration: 0.4,
-        
         x: "100%",  // Move to the right (offscreen)
         stagger: -0.05, // Stagger tiles' animation
         delay: 0.2, // Delay before animation starts
@@ -109,11 +201,9 @@ function animateTilesOut(onComplete) {
 
     // Reset the tiles back to 0% width and left: 0 for the next animation
     tl.set(tiles, { x: "0", width: "0" });
-
-    
 }
 
-// Add click event listeners to buttons
+// Add event listeners to buttons
 buttons.forEach(button => {
     button.addEventListener('click', handleButtonClick);
 });
@@ -132,27 +222,4 @@ for (let i = 0; i < acc.length; i++) {
 }
 
 
-window.onload = function () {
-    // Select the anchor links
-    const links = document.querySelectorAll("a[href^='#']");  // Select all links starting with #
-    const contents = document.querySelectorAll('#b .content');  // All content elements in #b
 
-    links.forEach(link => {
-        link.addEventListener('click', function (event) {
-            event.preventDefault();  // Prevent the default link behavior (scrolling)
-
-            const targetId = link.getAttribute('href').substring(1);  // Get the target id (e.g., 'ben')
-            const targetContent = document.getElementById(targetId);  // Find the corresponding content
-
-            // Hide all content first
-            contents.forEach(content => content.classList.remove("selected-content"));
-
-            // Show the target content
-            targetContent.classList.add("selected-content");
-
-            // Optionally highlight the clicked link
-            links.forEach(link => link.classList.remove("selected"));
-            link.classList.add("selected");
-        });
-    });
-};
